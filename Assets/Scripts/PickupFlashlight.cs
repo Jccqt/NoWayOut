@@ -7,34 +7,76 @@ public class PickupFlashlight : MonoBehaviour
     public float pickupRange = 3f;
 
     [Header("References")]
-    public GameObject flashlight;
+    public GameObject flashlight; // The one in your hand (initially disabled)
+
+    // Variable to remember what we are currently looking at
+    private GlowObjectEffect currentTarget;
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            TryPickup();
-        }
+        HandleLooking();
+        HandleInput();
     }
 
-    void TryPickup()
+    void HandleLooking()
     {
         Ray ray = new Ray(transform.position, transform.forward);
         RaycastHit hit;
 
-        // Shoot the laser!
+        // 1. Check if we hit something within range
         if (Physics.Raycast(ray, out hit, pickupRange))
         {
-            // Did we hit the flashlight?
+            // 2. Is it the flashlight?
             if (hit.collider.CompareTag("FlashlightPickup"))
             {
-                flashlight.SetActive(true);
+                // Get the glow script from the object we hit
+                GlowObjectEffect glowScript = hit.collider.GetComponent<GlowObjectEffect>();
 
-                Destroy(hit.collider.gameObject);
+                if (glowScript != null)
+                {
+                    // If we weren't looking at this before, highlight it!
+                    if (currentTarget != glowScript)
+                    {
+                        // If we were looking at a DIFFERENT object, turn that one off first
+                        if (currentTarget != null) currentTarget.ToggleHighlight(false);
 
-                // Debug log to confirm it worked
-                Debug.Log("Flashlight Picked Up!");
+                        currentTarget = glowScript;
+                        currentTarget.ToggleHighlight(true);
+                    }
+                    return; // Stop here, we found it.
+                }
             }
         }
+
+        // 3. If the ray hit NOTHING, or hit a wall (not the flashlight)
+        if (currentTarget != null)
+        {
+            // Turn off the glow on the last thing we looked at
+            currentTarget.ToggleHighlight(false);
+            currentTarget = null;
+        }
+    }
+
+    void HandleInput()
+    {
+        // We only allow pickup if we have a valid target (currentTarget is not null)
+        if (Input.GetMouseButtonDown(0) && currentTarget != null)
+        {
+            PickupObject();
+        }
+    }
+
+    void PickupObject()
+    {
+        // Activate the hand flashlight
+        flashlight.SetActive(true);
+
+        // Destroy the floor flashlight (which is currentTarget.gameObject)
+        Destroy(currentTarget.gameObject);
+
+        // Clear the target variable so we don't try to access a destroyed object
+        currentTarget = null;
+
+        Debug.Log("Flashlight Picked Up!");
     }
 }
