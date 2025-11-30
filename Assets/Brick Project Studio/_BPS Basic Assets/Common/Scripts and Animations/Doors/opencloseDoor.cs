@@ -48,7 +48,7 @@ namespace SojaExiles
             if (Player)
             {
                 float dist = Vector3.Distance(Player.position, transform.position);
-                if (dist < 15)
+                if (dist < 3)
                 {
                     if (Input.GetMouseButtonDown(0))
                     {
@@ -128,8 +128,20 @@ namespace SojaExiles
             yield return new WaitForSeconds(.5f);
         }
 
-        public void ForceOpen() { StartCoroutine(opening()); }
-        public void ForceClose() { StartCoroutine(closing()); }
+        public void ForceOpen()
+        {
+            if (!open)
+            {
+                StartCoroutine(opening());
+            }
+        }
+        public void ForceClose()
+        {
+            if (open)
+            {
+                StartCoroutine(closing());
+            }
+        }
         public void ForceLock() { isLocked = true; }
     }
 }

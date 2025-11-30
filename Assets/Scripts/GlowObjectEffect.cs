@@ -2,33 +2,37 @@ using UnityEngine;
 
 public class GlowObjectEffect : MonoBehaviour
 {
-    private Material mat;
-    private Color originalEmission;
+    [Header("UI Settings")]
+    public GameObject uiPromptPrefab; // Drag your 'InteractionPrompt' prefab here
+    public float promptHeight = 0.5f; // How high above the object the 'F' floats
+
+    private GameObject currentPrompt; // The actual instance of the UI
+    private bool isHovered = false;
 
     void Start()
     {
-        // Get the material of this object
-        Renderer rend = GetComponent<Renderer>();
-        mat = rend.material;
-
-        // Enable emission so we can make it glow
-        mat.EnableKeyword("_EMISSION");
-
-        // Save the default "off" color
-        originalEmission = mat.GetColor("_EmissionColor");
+        // Instantiate the UI but hide it immediately
+        if (uiPromptPrefab != null)
+        {
+            currentPrompt = Instantiate(uiPromptPrefab, transform.position + Vector3.up * promptHeight, Quaternion.identity);
+            currentPrompt.transform.SetParent(this.transform); // Make it follow the object
+            currentPrompt.SetActive(false);
+        }
     }
 
     public void ToggleHighlight(bool state)
     {
-        if (state)
+        isHovered = state;
+
+        if (currentPrompt != null)
         {
-            // Turn glow ON (Yellowish-white)
-            mat.SetColor("_EmissionColor", new Color(0.5f, 0.5f, 0.3f));
+            currentPrompt.SetActive(state);
         }
-        else
-        {
-            // Return to normal
-            mat.SetColor("_EmissionColor", originalEmission);
-        }
+    }
+
+    // Ensure UI is destroyed if object is picked up
+    void OnDestroy()
+    {
+        if (currentPrompt != null) Destroy(currentPrompt);
     }
 }

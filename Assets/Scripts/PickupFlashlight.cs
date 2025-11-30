@@ -2,14 +2,13 @@ using UnityEngine;
 
 public class PickupFlashlight : MonoBehaviour
 {
-
     [Header("Settings")]
     public float pickupRange = 3f;
+    public float aimRadius = 0.5f; // How "thick" the aim is (0.5 is generous)
 
     [Header("References")]
-    public GameObject flashlight; // The one in your hand (initially disabled)
+    public GameObject handFlashlight;
 
-    // Variable to remember what we are currently looking at
     private GlowObjectEffect currentTarget;
 
     void Update()
@@ -23,35 +22,28 @@ public class PickupFlashlight : MonoBehaviour
         Ray ray = new Ray(transform.position, transform.forward);
         RaycastHit hit;
 
-        // 1. Check if we hit something within range
-        if (Physics.Raycast(ray, out hit, pickupRange))
+        // use SphereCast instead of Raycast
+        // Think of this as firing a tennis ball instead of a laser pointer
+        if (Physics.SphereCast(ray, aimRadius, out hit, pickupRange))
         {
-            // 2. Is it the flashlight?
-            if (hit.collider.CompareTag("FlashlightPickup"))
+            // Check specifically for the Interactable script, not just the tag
+            GlowObjectEffect item = hit.collider.GetComponent<GlowObjectEffect>();
+
+            if (item != null)
             {
-                // Get the glow script from the object we hit
-                GlowObjectEffect glowScript = hit.collider.GetComponent<GlowObjectEffect>();
-
-                if (glowScript != null)
+                if (currentTarget != item)
                 {
-                    // If we weren't looking at this before, highlight it!
-                    if (currentTarget != glowScript)
-                    {
-                        // If we were looking at a DIFFERENT object, turn that one off first
-                        if (currentTarget != null) currentTarget.ToggleHighlight(false);
-
-                        currentTarget = glowScript;
-                        currentTarget.ToggleHighlight(true);
-                    }
-                    return; // Stop here, we found it.
+                    if (currentTarget != null) currentTarget.ToggleHighlight(false);
+                    currentTarget = item;
+                    currentTarget.ToggleHighlight(true);
                 }
+                return;
             }
         }
 
-        // 3. If the ray hit NOTHING, or hit a wall (not the flashlight)
+        // If we hit nothing interactable
         if (currentTarget != null)
         {
-            // Turn off the glow on the last thing we looked at
             currentTarget.ToggleHighlight(false);
             currentTarget = null;
         }
@@ -59,24 +51,16 @@ public class PickupFlashlight : MonoBehaviour
 
     void HandleInput()
     {
-        // We only allow pickup if we have a valid target (currentTarget is not null)
-        if (Input.GetMouseButtonDown(0) && currentTarget != null)
+        // Press F to interact (Standard RE controls)
+        if (Input.GetKeyDown(KeyCode.F) && currentTarget != null)
         {
-            PickupObject();
+            // Check if it's actually the flashlight by tag or name
+            if (currentTarget.CompareTag("FlashlightPickup"))
+            {
+                handFlashlight.SetActive(true);
+                Destroy(currentTarget.gameObject);
+                currentTarget = null; // Important: Clear the target immediately
+            }
         }
-    }
-
-    void PickupObject()
-    {
-        // Activate the hand flashlight
-        flashlight.SetActive(true);
-
-        // Destroy the floor flashlight (which is currentTarget.gameObject)
-        Destroy(currentTarget.gameObject);
-
-        // Clear the target variable so we don't try to access a destroyed object
-        currentTarget = null;
-
-        Debug.Log("Flashlight Picked Up!");
     }
 }
