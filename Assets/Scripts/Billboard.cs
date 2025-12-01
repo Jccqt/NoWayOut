@@ -1,8 +1,9 @@
 using UnityEngine;
 
-public class NewMonoBehaviourScript : MonoBehaviour
+public class Billboard : MonoBehaviour
 {
     private Camera mainCamera;
+    public bool reverseFace = true;
 
     void Start()
     {
@@ -11,8 +12,18 @@ public class NewMonoBehaviourScript : MonoBehaviour
 
     void LateUpdate()
     {
-        // Rotate the UI to look at the camera
-        transform.LookAt(transform.position + mainCamera.transform.rotation * Vector3.forward,
-                         mainCamera.transform.rotation * Vector3.up);
+        Vector3 directionToCamera = Camera.main.transform.position - transform.position;
+
+        // 2. Apply the rotation
+        if (reverseFace)
+        {
+            // Look AWAY from camera (Fixes backward text)
+            transform.rotation = Quaternion.LookRotation(-directionToCamera);
+        }
+        else
+        {
+            // Look AT camera
+            transform.rotation = Quaternion.LookRotation(directionToCamera);
+        }
     }
 }
