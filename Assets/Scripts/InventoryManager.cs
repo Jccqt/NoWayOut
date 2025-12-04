@@ -39,14 +39,12 @@ public class InventoryManager : MonoBehaviour
     {
         if (isInventoryOpen)
         {
-            // Show mouse
             Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            Cursor.visible = false;
             if (playerController != null) playerController.enabled = false;
         }
         else
         {
-            // Hide mouse
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             if (playerController != null) playerController.enabled = true;
@@ -60,6 +58,19 @@ public class InventoryManager : MonoBehaviour
             if (slots[i].currentItem == null)
             {
                 slots[i].UpdateSlot(itemToAdd);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool HasItem(ItemData itemToCheck)
+    {
+        for (int i = 0; i < slots.Length; i++)
+        {
+            // Check if the slot has an item and if it matches the required key
+            if (slots[i].currentItem == itemToCheck)
+            {
                 return true;
             }
         }

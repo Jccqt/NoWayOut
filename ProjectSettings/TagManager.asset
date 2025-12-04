@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 3
   tags:
   - FlashlightPickup
+  - DoorFrame
+  - Wall
   layers:
   - Default
   - TransparentFX

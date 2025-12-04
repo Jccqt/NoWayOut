@@ -13,6 +13,11 @@ namespace SojaExiles
         public Transform Player;
         public bool isLocked = false;
 
+        [Header("Key Settings")]
+        public ItemData requiredKey;
+        [Tooltip("If true, the key will be removed from inventory after unlocking.")]
+        public AudioClip unlockSound;
+
         [Header("Audio Settings")]
         public AudioSource doorSource;
         public AudioClip openSound;
@@ -20,24 +25,25 @@ namespace SojaExiles
         public AudioClip lockedSound;
 
         [Header("Event Settings")]
-        [Tooltip("If true, the Locked Event will only happen the first time you click.")]
         public bool triggerLockedOnce = true;
         private bool hasTriggeredLocked = false;
 
-        [Tooltip("If true, the Open Event will only happen the first time.")]
         public bool triggerOpenOnce = true;
         private bool hasTriggeredOpen = false;
 
-        // --- NEW: Close Once Settings ---
-        [Tooltip("If true, the Close Event will only happen the first time.")]
         public bool triggerCloseOnce = true;
         private bool hasTriggeredClose = false;
-        // --------------------------------
+
+        [Header("Auto Close Settings")]
+        public bool autoClose = false;
+        public float autoCloseDelay = 5.0f;
+        private Coroutine autoCloseRoutine;
 
         [Header("Interaction Events")]
         public UnityEvent OnOpenEvent;
         public UnityEvent OnCloseEvent;
         public UnityEvent OnLockedEvent;
+        public UnityEvent OnUnlockEvent; // New Event for when you unlock it
 
         void Start()
         {
@@ -57,13 +63,18 @@ namespace SojaExiles
                         {
                             if (isLocked)
                             {
-                                PlayLockedSound();
-
-                                if (!triggerLockedOnce || !hasTriggeredLocked)
+                                // --- NEW LOGIC STARTS HERE ---
+                                // 1. Check if the door requires a key and if the player has it
+                                if (requiredKey != null && InventoryManager.Instance.HasItem(requiredKey))
                                 {
-                                    OnLockedEvent.Invoke();
-                                    hasTriggeredLocked = true;
+                                    UnlockDoor();
                                 }
+                                // 2. If no key is needed, or player doesn't have it, do the standard locked behavior
+                                else
+                                {
+                                    HandleLockedBehavior();
+                                }
+                                // --- NEW LOGIC ENDS HERE ---
                             }
                             else
                             {
@@ -79,6 +90,34 @@ namespace SojaExiles
             }
         }
 
+        void UnlockDoor()
+        {
+            isLocked = false;
+            print("Door Unlocked!");
+
+            // Play unlock sound
+            if (doorSource != null && unlockSound != null)
+            {
+                doorSource.PlayOneShot(unlockSound);
+            }
+
+            OnUnlockEvent.Invoke();
+
+            // Automatically open the door immediately after unlocking
+            StartCoroutine(opening());
+        }
+
+        void HandleLockedBehavior()
+        {
+            PlayLockedSound();
+
+            if (!triggerLockedOnce || !hasTriggeredLocked)
+            {
+                OnLockedEvent.Invoke();
+                hasTriggeredLocked = true;
+            }
+        }
+
         void PlayLockedSound()
         {
             if (doorSource != null && lockedSound != null)
@@ -87,15 +126,20 @@ namespace SojaExiles
             }
         }
 
+        // ... (Keep existing AutoCloseTimer, opening, closing, ForceOpen, etc.) ...
+
+        IEnumerator AutoCloseTimer()
+        {
+            yield return new WaitForSeconds(autoCloseDelay);
+            if (open) StartCoroutine(closing());
+        }
+
         IEnumerator opening()
         {
             print("you are opening the door");
             openandclose.Play("OpeningReverse");
 
-            if (doorSource != null && openSound != null)
-            {
-                doorSource.PlayOneShot(openSound);
-            }
+            if (doorSource != null && openSound != null) doorSource.PlayOneShot(openSound);
 
             if (!triggerOpenOnce || !hasTriggeredOpen)
             {
@@ -104,6 +148,13 @@ namespace SojaExiles
             }
 
             open = true;
+
+            if (autoClose)
+            {
+                if (autoCloseRoutine != null) StopCoroutine(autoCloseRoutine);
+                autoCloseRoutine = StartCoroutine(AutoCloseTimer());
+            }
+
             yield return new WaitForSeconds(.5f);
         }
 
@@ -112,37 +163,29 @@ namespace SojaExiles
             print("you are closing the door");
             openandclose.Play("ClosingReverse");
 
-            if (doorSource != null && closeSound != null)
+            if (autoCloseRoutine != null)
             {
-                doorSource.PlayOneShot(closeSound);
+                StopCoroutine(autoCloseRoutine);
+                autoCloseRoutine = null;
             }
 
-            // --- NEW: Check Close Event Logic ---
+            if (doorSource != null && closeSound != null) doorSource.PlayOneShot(closeSound);
+
             if (!triggerCloseOnce || !hasTriggeredClose)
             {
                 OnCloseEvent.Invoke();
                 hasTriggeredClose = true;
             }
-            // ------------------------------------
 
             open = false;
             yield return new WaitForSeconds(.5f);
         }
 
-        public void ForceOpen()
-        {
-            if (!open)
-            {
-                StartCoroutine(opening());
-            }
-        }
-        public void ForceClose()
-        {
-            if (open)
-            {
-                StartCoroutine(closing());
-            }
-        }
+        // Keep your Force functions
+        public void ForceOpen() { if (!open) StartCoroutine(opening()); }
+        public void ForceClose() { if (open) StartCoroutine(closing()); }
         public void ForceLock() { isLocked = true; }
+        public void ForceUnlock() { isLocked = false; }
+        public void ForceRemoveAutoClose() { autoClose = false; }
     }
 }

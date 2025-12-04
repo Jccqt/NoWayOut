@@ -1,8 +1,12 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PickupItem : MonoBehaviour
 {
     public ItemData itemData;
+
+    [Header("Interaction Events")]
+    public UnityEvent onPickup;
 
     public void Interact()
     {
@@ -10,6 +14,8 @@ public class PickupItem : MonoBehaviour
 
         if (success)
         {
+            onPickup?.Invoke();
+
             if (itemData.id == "flashlight")
             {
                 GameObject handLight = GameObject.Find("FlashlightHolder");
