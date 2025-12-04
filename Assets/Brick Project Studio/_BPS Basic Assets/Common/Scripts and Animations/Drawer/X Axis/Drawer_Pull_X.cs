@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace SojaExiles
-
 {
-
 	public class Drawer_Pull_X : MonoBehaviour
 	{
 
@@ -69,6 +67,6 @@ namespace SojaExiles
 			yield return new WaitForSeconds(.5f);
 		}
 
-
+		public void ForceOpen() { if (!open) StartCoroutine(opening()); }
 	}
 }
