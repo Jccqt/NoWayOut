@@ -6,11 +6,20 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Boot.unity
+    guid: fe0c761855eb5284196fceb5691dffd3
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: 8ec8d9a9529341f4fa3f61f24c714792
+  - enabled: 1
     path: Assets/Scenes/CondominiumDaylight.unity
     guid: a64bfc582325a52478d1b1a8aa1fbed5
   - enabled: 1
     path: Assets/Scenes/MainScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/Credits.unity
+    guid: 0ad97e937253b094e8e244ddfa707e6b
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
