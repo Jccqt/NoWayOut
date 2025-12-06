@@ -355,103 +355,25 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '<size=150%>No Way Out </size>
-
-
-
-    <size=120%>Game Director </size>
-
-    Jose
-    Crisanto Calayag
-
-
-    <size=120%>Lead Programmer </size>
-
-    Jose Crisanto
-    Calayag
-
-
-    <size=120%>Game and Level Design </size>
-
-    Robby Buenaventura
-
-    Jose
-    Crisanto Calayag
-
-    Adrianne Villa
-
-    Jan Nathan Yumol
-
-
-    <size=120%>Sound
-    Designer</size>
-
-    Adrianne Villa
-
-
-    <size=120%>Writer</size>
-
-    Jose
-    Crisanto Calayag
-
-
-    <size=120%>Voice Actors</size>
-
-    Robby Buenaventura
-    - Radio
-
-    Jan Nathan Yumol - Protagonist
-
-
-    <size=150%>Special thansk to
-    the following artists</size>
-
-
-    <size=120%>Sketchfab</size>
-
-    schmoldt.art
-    - Death woman.fbx
-
-
-    <size=120%>Freesound.org</size>
-
-    sandb1ns - Fluorescent
-    Lightbulb Break.wav
-
-    courtneyeck - Woman Scream Distorted.wav
-
-    thetwiggydancer
-    - LittleEvilLaugh.wav
-
-    Breviceps - Unlock the door (1).wav
-
-    WasabiWielder
-    - Metal Flick Reload.wav
-
-    PatrickLieberkind - Dark Ambience.wav
-
-
-    <size=120%>Unity
-    Store</size>
-
-    PolyOne Studio - Gramaphone model
-
-    3Digitails - Simple
-    keys model
-
-    AK STUDIO ART - Radio model
-
-    Birkc Project Studio - Apartment
-    Kit model
-
-    rpgwhitelock - Allsky model
-
-    JeCase - Modular FPS Controller
-
-
-
-    Thanks
-    for playing!'
+  m_text: "<size=150%>No Way Out </size>\n\n\n<size=120%>Game Director </size>\nJose
+    Crisanto Calayag\n\n\n<size=120%>Lead Programmer </size>\nJose Crisanto Calayag\n\n\n<size=120%>Game
+    and Level Design </size>\nRobby Buenaventura\nJose Crisanto Calayag\nAdrianne
+    Villa\nJan Nathan Yumol\nJessie Samaniego\n\n\n<size=120%>Sound Designer</size>\nAdrianne
+    Villa\n\n\n<size=120%>Writer</size>\nJose Crisanto Calayag\n\n\n<size=120%>Voice
+    Actors</size>\nRobby Buenaventura - Radio\nJan Nathan Yumol - Protagonist\n\n\n<size=120%>QA
+    and Testers</size>\nAdrianne Villa\nJessie Samaniego\n\n\n<size=150%>Special
+    thansk to the following artists</size>\n\n\n<size=120%>Sketchfab</size>\nschmoldt.art
+    - Death woman.fbx\nMARROTLeni - Mannequin 1.fbx\n\n\n<size=120%>Freesound.org</size>\nsandb1ns
+    - Fluorescent Lightbulb Break.wav\ncourtneyeck - Woman Scream Distorted.wav\nthetwiggydancer
+    - LittleEvilLaugh.wav\nBreviceps - Unlock the door (1).wav\nWasabiWielder - Metal
+    Flick Reload.wav\nPatrickLieberkind - Dark Ambience.wav\n\n\n<size=120%>Unity
+    Store</size>\nPolyOne Studio - Gramaphone model\n3Digitails - Simple keys model\nAK
+    STUDIO ART - Radio model\nBirkc Project Studio - Apartment Kit model\nrpgwhitelock
+    - Allsky model\nJeCase - Modular FPS Controller\n\n\n<size=120%>Itch.io</size>\njedlondo
+    - Footsteps sounds \n\n\n<size=120%>Youtube</size>\nTiny Tim - Tip Toe Thru'
+    The Tulips With Me\n\n \nAll trademarks and assets belong to their respective
+    owners.\n\n\n\xA9 2025 JARCool Studio. This project is a non-commercial student
+    work.\n\n\nThank you for playing!"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 515583768cf0dea4fadcf1d3d8936a2e, type: 2}
   m_sharedMaterial: {fileID: 6202234063060793480, guid: 515583768cf0dea4fadcf1d3d8936a2e, type: 2}
